@@ -56,6 +56,7 @@
         score:0,
         l:['#9F0','#FF3','#F33','#C0C','#33C','#0F3','#F93'],
         v:[0x801,0x801,0x801,0x801,0x801,0x801,0x801,0x801,0x801,0x801,0x801,0x801,0x801,0x801,0x801,0x801,0x801,0x801,0x801,0xFFFF],
+		//正方形、长条
         d:[[0xCC00],[0x4444,0xF0],[0x8C40,0x6C00],[0x4C80,0xC600],[0x44C0,0x8E00,0xC880,0xE200],[0x88C0,0xE800,0xC440,0x2E00],[0x4E00,0x8C80,0xE400,0x4C40]],
         init:function(){
             var body = document.getElementById('body');
@@ -73,7 +74,8 @@
             G.next();
         },
         timeTesk:function(){
-            if(G.pause)return;
+            if(G.pause)
+			return;
             if(!G.move(G.x, G.y+1, G.t)){
                 var s = 0;
                 for(var i=0;i<19;i++){
@@ -150,6 +152,13 @@
                 }
             }
         },
+		stopInterval:function(){
+		
+		if(G.pause==false){
+		return G.pause=true;}
+		else{
+		return G.pause=false; }
+		},
         event:function(e,t){
             switch(e.keyCode){
                 case 37://左
@@ -166,9 +175,9 @@
                 break;
                 case 32:
                     while(G.timeTesk());
+					break;
 				case 13:
-				var stamp = document.getElementById("but1");
-                 stamp.disabled=true; 
+				    G.stopInterval();
 				break;
 					
             }
