@@ -1,29 +1,46 @@
+    var PORT = 8888;
+    var http = require('http');
+    var url=require('url');
+    var fs=require('fs');
+    var mine=require('./mine').types;
+    var path=require('path');
+    var Tools=require('./Tools');
+    //var tools = new Tools();
 
-var http = require('http');
-        // 用于请求的选项
-        var options = {
-           host: 'localhost',
-           port: '8081',
-           path: '/eluosi12345.html'  
-        };
+    var server = http.createServer(function (request, response) {
+        var pathname = url.parse(request.url).pathname;
+        var guessPage = Tools.guessPage(fs, path, path.dirname(process.execPath), pathname);
+        var realPath = guessPage.realPath;
+        var ext = guessPage.ext;
+            
+        fs.exists(realPath, function (exists) {
+            if (!exists) {
+                response.writeHead(404, {
+                    'Content-Type': 'text/plain'
+                });
 
-        // 处理响应的回调函数
-        var callback = function(response){
-           // 不断更新数据
-           var body = '';
-           response.on('data', function(data) {
-              body += data;
-           });
+                response.write("This request URL " + realPath + " was not found on this server.");
+                response.end();
+            } else {
+                fs.readFile(realPath, "binary", function (err, file) {
+                    if (err) {
+                        response.writeHead(500, {
+                            'Content-Type': 'text/plain'
+                        });
+                        response.end(err);
+                    } else {
+                        var contentType = mine[ext] || "text/plain";
+                        console.log("contentType: " + contentType);
+                        response.writeHead(200, {
+                            'Content-Type': contentType
+                        });
+                        response.write(file, "binary");
+                        response.end();
+                    }
+                });
+            }
+        });
+    });
+    server.listen(PORT);
+    console.log("Server runing at port: " + PORT + ".");
 
-           response.on('end', function() {
-              // 数据接收完成
-              console.log(body);
-           });
-        }
-        // 向服务端发送请求
-
- function mytest(){
-	var req = http.request(options, callback);
-        req.end();
-}
-        
