@@ -16,17 +16,17 @@
         <div class="content-form">
             <form method="post" action="" onsubmit="return submitTest()">
                 <div id="change_margin_1">
-                    <input id="input_1" class="user" type="text" name="user" placeholder="请输入用户名" onblur="oBlur_1()" onfocus="oFocus_1()">
+                 <input id="user" class="user" type="text" name="user" placeholder="请输入用户名" onblur="oBlur_1()" onfocus="oFocus_1()">
                 </div>
                 <!-- input的value为空时弹出提醒 -->
                 <p id="remind_1"></p>
                 <div id="change_margin_2">
-                    <input id="input_2" class="password" type="password" name="password" placeholder="请输入密码" onblur="oBlur_2()" onfocus="oFocus_2()">
+                    <input id="password" class="password" type="password" name="password" placeholder="请输入密码" onblur="oBlur_2()" onfocus="oFocus_2()">
                 </div>
                 <!-- input的value为空时弹出提醒 -->
                 <p id="remind_2"></p>
                 <div id="change_margin_3" >
-                    <input class="content-form-signup"  type="button" value="登录" onClick="location.href='eluosi12345.html'" >
+                    <input id="login" class="content-form-signup"  type="button" value="登录" >
             
                 </div>
             </form>
@@ -35,6 +35,43 @@
         <div><a class="content-login-link" href="sign_up.html">注册</a></div>
     </div>
 <script src="common_form_test.js"></script>
+<script src="http://libs.baidu.com/jquery/2.0.0/jquery.min.js"></script>
+<script>
+    function registered() {
+            window.location.href = 'sign_up.html';
+        }
+        
+    $(function () {
+        $("#login").click(function () {
+            if ($("#user").val().length == 0){
+                return alert("请输入内容!");
+            }
+            if ($("#password").val().length == 0){
+                return alert("请输入密码!");
+            }
+        
+            $.ajax({
+                url:"http://localhost:8080/log_in",
+                type:"POST",
+                data:{
+                    username:$("#user").val(),
+                    password:$("#password").val()
+                },
+                success:function (res) {
+                if(res =="登录成功!"){
+                    window.location.href='./eluosi12345.html';
+                }
+                else
+                    alert(res);
+                },
+                error:function (err) {
+                console.log(err);
+                }
+            })
+    
+        })
+    });
+</script>
 <script src="test.js"></script>
 </body>
 </html>
